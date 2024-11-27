@@ -30,7 +30,7 @@
 \headsep=0.25in
 
 \title{ Introduction to Natural Language Processing, Assignment 1 }
-\author{ Enrique Mesonero Ronco \and Sergio Sánchez García \and Ismael }
+\author{ Enrique Mesonero Ronco \and Sergio Sánchez García \and Ismael Cross Moreno }
 \date{\today}
 
 \begin{document}
@@ -44,26 +44,43 @@
 \section { Text Processing }
 	\subsection { Tokenization }
 	 \begin{itemize}
-	\item First of all, it is necesary to lay down the initial base vocabulary:
+	\item The first step is pre-tokenization, produce the set of word-leven tokens $V_W$ with their occurrence frequencies
+		\begin{equation*}
+			V_B = \{ bat: 10, bar: 5, cat: 8, car: 4, cart: 6 \}
+		\end{equation*}
+	\item Secondly, it is necesary to initial base vocabulary of character tokens:
 		\begin{equation*}
 			V_B = \{a,b,c,r,t\}
 		\end{equation*}
 		\begin{equation*}
-			V_W (\text{as per} V_P) = \{b, a, t: 10; b, a, r: 5; c, a, t: 8; c, a, r: 4; c, a, r, t: 6\}
+			V_W (\text{as per} V_B) = \{b, a, t: 10; b, a, r: 5; c, a, t: 8; c, a, r: 4; c, a, r, t: 6\}
 		\end{equation*}
 
-	\item Secondly, merge tokens based on frequency:
+	\item Thirdly, start with the iteration until desired vocabulary size is reached (In this case, only one iteration is needed):
+		\begin{itemize}
+		\item Count the frequency of each pair of consecutive tokens from $V_B$
+		\begin{equation*}
+			"b" + "a" = 15, "a" + "t" = 18, "a" + "r"  = 15, "c" + "a" = 18, "a" + "r" = 15, "r" + "t" = 6
+		\end{equation*}
+		\item Choose the highest frequency pair, even though "a" + "t" and "c" + "a" has the same frequency we are going to choose "c" + "a" (in the next iteration "a" + "t" would be chosen)
 		\begin{equation*}
 			"c" + "a" \text{occur the most, 18 times in total}
 		\end{equation*}
+		\item Merge the two tokens with the highest frequency (over all words from $V_W$)
 		\begin{equation*}
 			V_B=\{a,b,c,r,t,ca\}
 		\end{equation*}
+		\item Add the merged token to the vocabulary $V_B$
 		\begin{equation*}
 			V_W={b, a, t: 10; b, a, r: 5; ca, t: 8, ca, r: 4; ca, r, t: 6}
 		\end{equation*}
+		\end{itemize}
 	\end{itemize}
 	\subsection { Levenshtein Distance }
+
+	\begin{itemize}
+	\item hund $\rightarrow$ handy 
+	\end{itemize}
 
 	\begin{center}
 	\begin{tabular} { | m{1cm} | m{1cm} | m{1cm} | m{1cm} | m{1cm} | m{1cm} | }
@@ -84,7 +101,12 @@
 		\hline
 	\end{tabular}
 	\end{center}
-hund $\rightarrow$ handy Total $\rightarrow$ 1 change operation + 1 add operation $\rightarrow$ Levensthein Distance = 2
+	
+	Total $\rightarrow$ 1 change operation + 1 add operation $\rightarrow$ Levensthein Distance = 2
+
+	\begin{itemize}
+	\item natty $\rightarrow$ gritty 
+	\end{itemize}
 
 	\begin{center}
 	\begin{tabular} { | m{1cm} | m{1cm} | m{1cm} | m{1cm} | m{1cm} | m{1cm} | m{1cm} | }
@@ -107,11 +129,15 @@ hund $\rightarrow$ handy Total $\rightarrow$ 1 change operation + 1 add operatio
 		\hline
 	\end{tabular}
 	\end{center}
-natty $\rightarrow$ gritty Total $\rightarrow$ 2 change operation + 1 add operation $\rightarrow$ Levensthein Distance = 3
+
+	Total $\rightarrow$ 2 change operation + 1 add operation $\rightarrow$ Levensthein Distance = 3
 
 \newpage
 \section { Words and the Company They Keep }
 	\subsection { Pearson's Chi-sqaure Test }
+	\begin{enumerate}
+
+	\item We start from the word co-occurrence table (aka contingency table)
 	\begin{center}
 	\begin{tabular} { | m{2cm} | m{2cm} | m{2cm} | m{2cm} | }
 		\hline
@@ -126,8 +152,9 @@ natty $\rightarrow$ gritty Total $\rightarrow$ 2 change operation + 1 add operat
 	\end{tabular}
 	\end{center}
 
+	$E_{ij}$: Expected frequency of the element in the contingency table
 	\begin{equation*}
-		 E_ij = \frac{f(w_i) \cdot f(w_j)}{N}
+		 E_{ij} = \frac{f(w_i) \cdot f(w_j)}{N}
 	\end{equation*}
 
 \renewcommand{\arraystretch}{1.5}
@@ -156,12 +183,63 @@ natty $\rightarrow$ gritty Total $\rightarrow$ 2 change operation + 1 add operat
 		\hline
 	\end{tabular}
 	\end{center}
+	\item $\chi^2$: statistic for a pair of words $(w_i, w_j)$
 	\begin{equation*}
 		\chi^2 = \sum_{i,j} \frac{(O_i,j - E_i,j)^2}{E_i,j}
 	\end{equation*}
 	\begin{equation*}
 	\chi^2 = \frac{(9-0.676)^2}{0.676} + \frac{(1770-1778.32)^2}{1778.32} + \frac{(75-83.32)^2}{83.32} + \frac{(219243-219234.6759)^2}{219234.6759} = 102.5 + 0.04 + 0.83 + 3.16 \cdot 10^{-4} = 103.37
 	\end{equation*}
+
+	\item The $\chi^2$ is 103.37, bigger than the chi-square distribution with 1 degree of freedom at the 0.005 significance level is 7.88. The null hypothesis assumes no relationship between A and B, meaning any differences between observed and expected data are due to random chance. The critical value of 7.88 is the threshold for deciding if these differences are too large to be explained by chance. In this case, the test value is 103.37, far exceeding the threshold, indicating the differences are highly unlikely to occur randomly. Therefore, we reject the null hypothesis and conclude that A and B are not independent, showing a significant and meaningful relationship.
+
+	\end{enumerate}
 	\subsection { PMI: Pointwise Mutual Information }
+\begin{enumerate}
+    \item \textbf{When is PMI between two words negative and what does a negative PMI indicate?}
+    
+    PMI is negative when the observed probability of two words co-occurring is less than the expected probability if they were independent. A negative PMI indicates that the words co-occur less often than expected, suggesting a weak or even negative association between them.
+
+    \item \textbf{What are practical problems with PMI?}
+
+    Some practical problems with PMI include:
+    \begin{itemize}
+        \item \textbf{Bias towards low-frequency words:} PMI assigns high values to rare word pairs, even if their co-occurrence is not meaningful.
+        \item \textbf{Sparsity issues:} PMI can be undefined if one of the words has zero occurrences in the data.
+        \item \textbf{Misleading results in small datasets:} PMI depends on reliable probability estimates, which can be inaccurate for small corpora.
+    \end{itemize}
+
+    \item \textbf{What modifications will you make to PMI to address the problems? Give reasons for making these modifications.}
+    \begin{itemize}
+        \item \textbf{Normalization:} Normalizing PMI values (e.g., by dividing by the log of the joint probability) reduces bias towards rare words.
+        \item \textbf{Smoothing:} Applying additive smoothing prevents undefined PMI values by avoiding zero probabilities.
+        \item \textbf{Shifted PMI (SPMI):} Adding a constant (e.g., subtracting the log of the dataset size) adjusts the scale and prevents overestimation of rare word pairs.
+    \end{itemize}
+
+    These modifications ensure more robust results and better handling of frequency biases.
+
+    \item \textbf{How do the concepts of lexical associations evolve when moving from bigrams to n-grams where $ n > 2 $?}
+
+    In bigrams, lexical associations capture relationships between two consecutive words. When moving to n-grams, the associations extend to sequences of $ n $ words, capturing more complex dependencies and contextual information. This is achieved with extension patterns that generalize lexical association measures to n-gram length.
+
+    \item \textbf{What are extension patterns in terms of lexical associations, and how do they enable the application of bigram-based measures?}
+
+    Extension patterns consists on decomposing n-gram associations into a combination of smaller units, like bigrams or trigrams. Extension patterns enable application of bi-grand measures by generalizing to n-grams, some generalizations are more straightforward than others.
+  
+    \item \textbf{How are the following two functions computing lexical association for n-grams differently?}
+	\begin{equation*}
+	G_1 = \frac{LA(w_1, w_2 ... w_n) + LA(w1 ... w_{n-1}, w_n)}{2}
+	\end{equation*}
+   	\begin{itemize}
+        \item \textbf{G1:} This function treats the n-gram by breaking it into two sub-components for pairwise evaluation.
+    	\end{itemize}
+
+	\begin{equation*}
+	G_2 = \frac{1}{n - 1}\sum^{n-1}_{i=1}LA(w_i, w_{i+1})
+	\end{equation*}
+	\begin{itemize}
+        \item \textbf{G2:} This method treats the n-gram breaking it into two sub-components for pairwise evaluation. It emphasizes associations between groups of words at both ends of the n-gram.
+    \end{itemize}
+\end{enumerate}
 
 \end{document}
