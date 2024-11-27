@@ -44,7 +44,7 @@
 \section { Text Processing }
 	\subsection { Tokenization }
 	 \begin{itemize}
-	\item The first step is pre-tokenization, produce the set of word-leven tokens $V_W$ with their occurrence frequencies
+	\item The first step is pre-tokenization, it consists on producing the set of word-leven tokens $V_W$ with their occurrence frequencies
 		\begin{equation*}
 			V_B = \{ bat: 10, bar: 5, cat: 8, car: 4, cart: 6 \}
 		\end{equation*}
@@ -102,7 +102,7 @@
 	\end{tabular}
 	\end{center}
 	
-	Total $\rightarrow$ 1 change operation + 1 add operation $\rightarrow$ Levensthein Distance = 2
+	Total: 1 substitution operation + 1 insertion operation $\rightarrow$ Levensthein Distance = 2
 
 	\begin{itemize}
 	\item natty $\rightarrow$ gritty 
@@ -130,7 +130,7 @@
 	\end{tabular}
 	\end{center}
 
-	Total $\rightarrow$ 2 change operation + 1 add operation $\rightarrow$ Levensthein Distance = 3
+	Total: 2 substitution operations + 1 insertion operation $\rightarrow$ Levensthein Distance = 3
 
 \newpage
 \section { Words and the Company They Keep }
@@ -191,7 +191,7 @@
 	\chi^2 = \frac{(9-0.676)^2}{0.676} + \frac{(1770-1778.32)^2}{1778.32} + \frac{(75-83.32)^2}{83.32} + \frac{(219243-219234.6759)^2}{219234.6759} = 102.5 + 0.04 + 0.83 + 3.16 \cdot 10^{-4} = 103.37
 	\end{equation*}
 
-	\item The $\chi^2$ is 103.37, bigger than the chi-square distribution with 1 degree of freedom at the 0.005 significance level is 7.88. The null hypothesis assumes no relationship between A and B, meaning any differences between observed and expected data are due to random chance. The critical value of 7.88 is the threshold for deciding if these differences are too large to be explained by chance. In this case, the test value is 103.37, far exceeding the threshold, indicating the differences are highly unlikely to occur randomly. Therefore, we reject the null hypothesis and conclude that A and B are not independent, showing a significant and meaningful relationship.
+	\item The chi-square value is 103.37, which is much larger than the critical value of 7.88 from the chi-square distribution (with 1 degree of freedom at the 0.005 significance level). The critical value of 7.88 is the threshold for deciding if these differences are too large to be explained by chance. In this case, the test value is 103.37, far exceeding the threshold, indicating the differences are highly unlikely to occur randomly. Therefore, we reject the null hypothesis of independence and conclude that A and B have a significant and meaningful relationship.
 
 	\end{enumerate}
 	\subsection { PMI: Pointwise Mutual Information }
@@ -231,14 +231,14 @@
 	G_1 = \frac{LA(w_1, w_2 ... w_n) + LA(w1 ... w_{n-1}, w_n)}{2}
 	\end{equation*}
    	\begin{itemize}
-        \item \textbf{G1:} This function treats the n-gram by breaking it into two sub-components for pairwise evaluation.
+        \item \textbf{G1:} This function treats the n-gram by breaking it into two sub-components for pairwise evaluation. It decomposes the n-gram into two n-1-gram lexical associations, it ends up dividing by 2 the sum of both decompositions to smooth variability and to get a balanced score.
     	\end{itemize}
 
 	\begin{equation*}
 	G_2 = \frac{1}{n - 1}\sum^{n-1}_{i=1}LA(w_i, w_{i+1})
 	\end{equation*}
 	\begin{itemize}
-        \item \textbf{G2:} This method treats the n-gram breaking it into two sub-components for pairwise evaluation. It emphasizes associations between groups of words at both ends of the n-gram.
+        \item \textbf{G2:} This method treats the n-gram breaking it into multiple sub-components for average association. It decomposes into multiple bigrams of the consecutive 'words', it ends up dividing by n-1 the sum of all the decompositions to normalize the score.
     \end{itemize}
 \end{enumerate}
 
