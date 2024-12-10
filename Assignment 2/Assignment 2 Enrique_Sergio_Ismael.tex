@@ -32,14 +32,14 @@
 \textheight=9.0in
 \headsep=0.25in
 
-\title{ Introduction to Natural Language Processing, Assignment 2 }
+\title{ Introduction to Natural Language Processing, Assignment 2}
 \author{ Enrique Mesonero Ronco \and Sergio Sánchez García \and Ismael Cross Moreno }
 \date{\today}
 
 \begin{document}
 \maketitle
 \begin{figure}[h!]
-	\includegraphics[width=\linewidth]{C:/Users/Enrique/Desktop/Clases/Introduction to NLP/Ejercicio 2/Exercise2.png}
+	\includegraphics[width=\linewidth]{C:/Users/sergi/Documents/GitHub/IntroductionToNLP/Assignment 2/Exercise2.png}
 \end{figure}
 \newpage
 \tableofcontents
@@ -50,7 +50,7 @@ Given the following raw co-occurrence counts of words with contexts jealous
 $(c_1)$ and gossip $(c_2)$:
 
 	\begin{center}
-	\begin{tabular} { | m{2cm} | m{2cm} | m{2cm} | }
+	\begin{tabular} { | m{1cm} | >{\centering\arraybackslash}m{2cm} | >{\centering\arraybackslash}m{2cm} | }
 		\hline
 		 & $c_1 \text{(jealous)}$ &  $c_2 \text{(gossip)} $\\
 		\hline
@@ -151,23 +151,24 @@ d(x,y) = \sqrt{\sum_{i=1}^n (x_i - y_i)^2}
         \item $w_1$ and $ w_2 \rightarrow 
 	d(w_1, w_2) = \sqrt{(0.022 - 0.030)^2 + (0.0906 - 0)^2} = 0.091$
         \item $w_2 $ and $ w_3 \rightarrow
-	d(w_1, w_2) = \sqrt{(0.0307 - 0.0376)^2 + (0 - 0)^2} = 0.0076$
+	d(w_2, w_3) = \sqrt{(0.0300 - 0.0376)^2 + (0 - 0)^2} = 0.0076$
     \end{enumerate}
     
     \item \textbf{Discussion} \\
     Based on the Euclidean distances computed, evaluate whether Euclidean distance is an appropriate measure for capturing the relationships between the words.\\
-	\textbf{Answer:} Is not a valid option because the Euclidean Distance is affected by vectors length.
+	\textbf{Answer:} Is not a valid option because the Euclidean distance is affected by vectors length, a long vector would have larger magnitudes so the Euclidean distance would increase even if the direction of the vector is the same.
 \end{enumerate}
 	\subsection { Prediction Based Word Vectors }
 
 	\begin{itemize}
 		\item Why does Word2Vec use separate input vectors $(u_w)$ and output vectors
 $(v_w)$ for each word, and how does this benefit the model’s performance?\\
-\textbf{Answer:} Two random vectors (of dimension $d << |V|$) assigned to each word:
+\textbf{Answer:} Word2Vec uses two random vectors (of dimension $d << |V|$) assigned to each word:
 		\begin{itemize}
 			\item $u_w \rightarrow$ the "input" vector of the word $w$, when it is used to predict another word.
 			\item $v_w \rightarrow$ the "output" vector of the word $w$, when it is the one being predicted.
 		\end{itemize}
+\textbf It uses two vectors for each word to minimize the probablity because with just one vector used for context and center word the minimization is not possible, the vector associated to the center word is different that the vector associated to the context of the word.
 
 		\item What are the primary differences between the Skip-Gram and Continuous
 Bag-of-Words (CBOW) models in Word2Vec, and in what scenarios might
@@ -180,7 +181,7 @@ one outperform the other?\\
 
 		\item How does negative sampling improve the efficiency of training Word2Vec
 models compared to using the full softmax function?\\
-\textbf{Answer:} Denominator in softmax sums over words in $V_N$, instead of the whole $V \rightarrow N<<|V|$
+\textbf{Answer:} Denominator in softmax sums over words in $V_N$, instead of the whole $V \rightarrow N<<|V|$, this improves the efficiency because sotftmax is applied on a shorter vector.
 
 		\item How does the choice of window size in Word2Vec affect the type of semantic
 relationships the model captures?\\
@@ -192,7 +193,7 @@ relationships the model captures?\\
 
 		\item What strategies canWord2Vec employ to handle out-of-vocabulary (OOV)
 words, and what are the implications of these strategies?\\
-\textbf{Answer:} Tokenization: enrich word embeddings with subword information (low frequency "token" and "ization" more frequent). Learn subwords vectors (char n-grams) along with word-level embeddings.
+\textbf{Answer:} The main strategy is tokenization, that enrich word embeddings with subword information, this way the vector of OOV words is composed of embeddings that belong to the vocabulary and new infromation about the words can be obtained from them.
 	\end{itemize}
 
 \newpage
@@ -235,123 +236,92 @@ The initial topic distributions over words ($\phi_k$) and document distributions
     \item \textbf{Document 2}: banana, cherry
 \end{itemize}
 
-\section*{Steps to Solve}
 
-\subsection*{1. Compute Topic Assignment Probabilities}
-For each word in each document, compute the probability of assigning it to each topic using the current $\phi$ and $\theta$ values. Specifically, calculate:
+
+
+\begin{enumerate}
+ \item For each word in each document, compute the probability of assigning it to each topic using the current $\phi$ and $\theta$ values. Specifically, calculate:
 \[
 P(z_{mn} = k) \propto \phi_k[w] \times \theta_m[k]
 \]
-for each word $w$ in document $m$.
+for each word $w$ in document $m$.\\
+\textbf{Answer:}
+	\begin{itemize}
+	\item $ \text{"apple" in document 1} \rightarrow P(Z_{11} = 1) \propto \frac{1}{3} \cdot \frac{1}{2} = \frac{1}{6}$
+	\item $ \text{"banana" in document 1} \rightarrow P(Z_{11} = 1) \propto \frac{1}{3} \cdot \frac{1}{2} = \frac{1}{6}$
+	\item $ \text{"banana" in document 2} \rightarrow P(Z_{11} = 1) \propto \frac{1}{3} \cdot \frac{1}{2} = \frac{1}{6}$
+	\item $ \text{"cherry" in document 2} \rightarrow P(Z_{11} = 1) \propto \frac{1}{3} \cdot \frac{1}{2} = \frac{1}{6}$
+	\end{itemize}
+	\text As we expected, the probabilities for all words are equal, so no preference exists between topics.
 
-The probability of assigning each word \( w \) in document \( m \) to topic \( k \) is calculated as:
-\[
-P(z_{mn} = k) \propto \phi_k[w] \cdot \theta_m[k]
-\]
+ \item Based on the probabilities computed earlier, assign a new topic to each word in each document. Assume you sample deterministically by choosing the topic with the higher probability.\\
+\textbf{Answer:}
+	We assign the new topics to each word in each document:
+	\begin{itemize}
+	    \item \textbf{Document 1:} Assign topic 1 to "apple" and topic 2 to "banana".
+	    \item \textbf{Document 2:} Assign topic 1 to "banana" and topic 2 to "cherry".
+	\end{itemize}
 
-For both topics (\( k = 1, 2 \)), and all words in the documents:
-\[
-\phi_k[w] = \frac{1}{3}, \quad \theta_m[k] = \frac{1}{2}
-\]
-Thus:
-\[
-P(z_{mn} = k) \propto \frac{1}{3} \cdot \frac{1}{2} = \frac{1}{6}
-\]
 
-\subsubsection*{Normalization of \( P(Z_{11} = k) \)}
-
-Given:
-\[
-P(Z_{11} = 1) \propto \frac{1}{6}, \quad P(Z_{11} = 2) \propto \frac{1}{6}
-\]
-
-The sum of unnormalized probabilities is:
-\[
-\text{Sum} = \frac{1}{6} + \frac{1}{6} = \frac{2}{6}
-\]
-
-Normalized probabilities:
-\[
-P(Z_{11} = 1) = \frac{\frac{1}{6}}{\frac{2}{6}} = \frac{1}{2}
-\]
-\[
-P(Z_{11} = 2) = \frac{\frac{1}{6}}{\frac{2}{6}} = \frac{1}{2}
-\]
-
-Thus, both probabilities are:
-\[
-P(Z_{11} = 1) = \frac{1}{2}, \quad P(Z_{11} = 2) = \frac{1}{2}
-\]
-The probabilities for all words are equal, so no preference exists between topics.
-
-\subsection*{2. Assign New Topics}
-Based on the probabilities computed earlier, assign a new topic to each word in each document. Assume you sample deterministically by choosing the topic with the higher probability.
-
-Since the probabilities are equal, we assign topics deterministically:
-\begin{itemize}
-    \item \textbf{Document 1:} Assign topic 1 to "apple" and topic 2 to "banana".
-    \item \textbf{Document 2:} Assign topic 1 to "banana" and topic 2 to "cherry".
-\end{itemize}
-
-\subsection*{3. Update Distributions}
-Update the $\phi_k$ and $\theta_m$ distributions based on the new topic assignments. Compute the new probabilities:
+  \item Update the $\phi_k$ and $\theta_m$ distributions based on the new topic assignments. Compute the new probabilities:
 \[
 P(w|k) = \frac{C(w, k)}{\sum_{w'} C(w', k)}
 \]
 \[
 P(k|d) = \frac{C(k, d)}{\sum_{k'} C(k', d)}
 \]
-where $C(w, k)$ is the count of word $w$ assigned to topic $k$ across all documents, and $C(k, d)$ is the count of topic $k$ in document $d$.
-\textbf{Updated \( \phi_k \):}
-\[
-P(w|k) = \frac{C(w, k)}{\sum_{w'} C(w', k)}
-\]
-\[
-C(w, k):
-\begin{aligned}
-    &C(\text{apple}, 1) = 1, \quad C(\text{banana}, 1) = 1, \quad C(\text{cherry}, 1) = 0 \\
-    &C(\text{apple}, 2) = 0, \quad C(\text{banana}, 2) = 1, \quad C(\text{cherry}, 2) = 1
-\end{aligned}
-\]
+where $C(w, k)$ is the count of word $w$ assigned to topic $k$ across all documents, and $C(k, d)$ is the count of topic $k$ in document $d$.\\
 
-\[
-\phi_1 =
-\begin{bmatrix}
-\frac{1}{2} % apple
-\frac{1}{2} % banana
-0            % cherry
-\end{bmatrix}, \quad
-\phi_2 =
-\begin{bmatrix}
-0             % apple
-\frac{1}{2}  % banana
-\frac{1}{2}  % cherry
-\end{bmatrix}
-\]
+\textbf{Answer:}
+	\textbf{Updated \( \phi_k \):}
+	\[
+	C(w, k):
+	\begin{aligned}
+	    &C(\text{apple}, 1) = 1, \quad C(\text{banana}, 1) = 1, \quad C(\text{cherry}, 1) = 0 \\
+	    &C(\text{apple}, 2) = 0, \quad C(\text{banana}, 2) = 1, \quad C(\text{cherry}, 2) = 1
+	\end{aligned}
+	\]
+	
+	\[
+	\phi_1 =
+	\begin{bmatrix}
+	\frac{1}{2} % apple
+	\frac{1}{2} % banana
+	0            % cherry
+	\end{bmatrix}, \quad
+	\phi_2 =
+	\begin{bmatrix}
+	0             % apple
+	\frac{1}{2}  % banana
+	\frac{1}{2}  % cherry
+	\end{bmatrix}
+	\]
+	
+	\textbf{Updated \( \theta_m \):}
+	\[
+	P(k|d) = \frac{C(k, d)}{\sum_{k'} C(k', d)}
+	\]
+	\[
+	C(k, d):
+	\begin{aligned}
+	    &C(1, \text{Doc 1}) = 1, \quad C(2, \text{Doc 1}) = 1 \\
+	    &C(1, \text{Doc 2}) = 1, \quad C(2, \text{Doc 2}) = 1
+	\end{aligned}
+	\]
+	
+	\[
+	\theta_1 =
+	\begin{bmatrix}
+	\frac{1}{2}  % Topic 1
+	\frac{1}{2}  % Topic 2
+	\end{bmatrix}, \quad
+	\theta_2 =
+	\begin{bmatrix}
+	\frac{1}{2}  % Topic 1
+	\frac{1}{2}  % Topic 2
+	\end{bmatrix}
+	\]
 
-\textbf{Updated \( \theta_m \):}
-\[
-P(k|d) = \frac{C(k, d)}{\sum_{k'} C(k', d)}
-\]
-\[
-C(k, d):
-\begin{aligned}
-    &C(1, \text{Doc 1}) = 1, \quad C(2, \text{Doc 1}) = 1 \\
-    &C(1, \text{Doc 2}) = 1, \quad C(2, \text{Doc 2}) = 1
-\end{aligned}
-\]
-
-\[
-\theta_1 =
-\begin{bmatrix}
-\frac{1}{2}  % Topic 1
-\frac{1}{2}  % Topic 2
-\end{bmatrix}, \quad
-\theta_2 =
-\begin{bmatrix}
-\frac{1}{2}  % Topic 1
-\frac{1}{2}  % Topic 2
-\end{bmatrix}
-\]
+\end{enumerate}
 
 \end{document}
