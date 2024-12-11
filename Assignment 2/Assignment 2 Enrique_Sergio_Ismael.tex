@@ -256,7 +256,7 @@ for each word $w$ in document $m$.\\
 
  \item Based on the probabilities computed earlier, assign a new topic to each word in each document. Assume you sample deterministically by choosing the topic with the higher probability.\\
 \textbf{Answer:}
-	We assign the new topics to each word in each document:
+	We assign the topics deterministically to each word in each document:
 	\begin{itemize}
 	    \item \textbf{Document 1:} Assign topic 1 to "apple" and topic 2 to "banana".
 	    \item \textbf{Document 2:} Assign topic 1 to "banana" and topic 2 to "cherry".
@@ -272,7 +272,7 @@ P(k|d) = \frac{C(k, d)}{\sum_{k'} C(k', d)}
 \]
 where $C(w, k)$ is the count of word $w$ assigned to topic $k$ across all documents, and $C(k, d)$ is the count of topic $k$ in document $d$.\\
 
-\textbf{Answer:}
+\textbf{Answer:}\\
 	\textbf{Updated \( \phi_k \):}
 	\[
 	C(w, k):
@@ -298,9 +298,6 @@ where $C(w, k)$ is the count of word $w$ assigned to topic $k$ across all docume
 	\]
 	
 	\textbf{Updated \( \theta_m \):}
-	\[
-	P(k|d) = \frac{C(k, d)}{\sum_{k'} C(k', d)}
-	\]
 	\[
 	C(k, d):
 	\begin{aligned}
